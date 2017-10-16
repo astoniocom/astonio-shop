@@ -1,0 +1,1 @@
+electron-packager d:\@_Dev\astonio-shop\ FanivekShop --out=e:/Desktop1 --overwrite --electronVersion=1.7.8 --platform=win32
