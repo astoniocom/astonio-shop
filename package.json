@@ -57,6 +57,7 @@
     "core-js": "^2.4.1",
     "css-loader": "^0.28.1",
     "cssnano": "^3.10.0",
+    "electron-reload": "^1.2.2",
     "exports-loader": "^0.6.3",
     "file-loader": "^0.10.0",
     "html-webpack-plugin": "^2.29.0",
