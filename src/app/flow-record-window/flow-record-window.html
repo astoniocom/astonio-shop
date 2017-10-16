@@ -1,0 +1,60 @@
+<div fxLayout="column" class="ast-common-record-window ast-window-content" [ngClass]="{'ast-common-record-window-loading': isLoading}">
+  <div fxFlex="none">
+    <div class="ast-common-record-window-errors" *ngIf="record.__director__.messages && record.__director__.messages.length">
+      <div *ngFor="let recordMessage of record.__director__.messages" >
+        {{ recordMessage.message }} 
+      </div>
+    </div>
+  </div>
+  <ast-model-form  fxFlex="none" style="width:100%" fxFlex="none" #form [model]="record.__director__.model" [record]="record" [fields]="[{exclude: ['total', 'cash', 'id', 'flow_product__flow_set', 'author']}]" [edit]="edit"></ast-model-form>
+  <div fxFlex="none" *ngIf="edit">
+    <ast-form-field-group>
+      <ast-label class="form-field-group-label">Поиск по штрих-коду:</ast-label>
+      <ast-text-input class="form-field-group-control" #barcodeInput [(ngModel)]="barcode" (keydown)="onInputKeyDown($event)"></ast-text-input>
+    </ast-form-field-group>
+  </div>
+
+  <div fxFlex="grow" fxLayout="column" >
+    <ast-related-records-grid-toolbar fxFlex="none" [grid]="grid" *ngIf="edit"></ast-related-records-grid-toolbar>
+    <ast-related-records-grid fxFlex="grow" 
+      [relatedRecords]="record['flow_product__flow_set']" 
+      [readonly]="['manualPrice', 'total_usd', 'price_out_usd', 'total_rub']"
+      [fields]="['flow_product__product', {exclude: ['product_id', 'product_name','flow_product__flow', 'flow_id', 'flow_product__product', 'weight']}, 'weight']" #grid 
+      [edit]="edit" (renderCell)="onRenderCell($event)" (cellValueChanged)="onCellValueChanged($event)"></ast-related-records-grid>    
+  </div>
+  <div fxFlex="none" style="z-index:0">
+    <ast-model-form-field-group *ngIf="record" [edit]="false" [model]="record.__director__.model" field="total" [(ngModel)]="record['total']"></ast-model-form-field-group>
+    <ast-model-form-field-group *ngIf="record" [edit]="edit" [model]="record.__director__.model" field="cash" [(ngModel)]="record['cash']"></ast-model-form-field-group>
+    <ast-form-field-group>
+      <ast-label class="form-field-group-label">Сдача:</ast-label>
+      <div class="form-field-group-control" style="float:right">{{ getChangeValue() }}</div>
+    </ast-form-field-group>
+    <ast-toolbar class="ast-bottom-window-toolbar">
+      <div fxLayout="row" style="margin:0">
+        <div class="ast-toolbar-row" fxFlex="auto">
+          {{record['author']}}
+        </div>
+        <div  class="ast-toolbar-row" fxFlex="nogrow">
+          <ast-dropdown-button text="Actions">
+            <ast-popup-menu>
+              <ast-popup-menu-item text="Reload" (click)="reload()" [disabled]="record.__director__.isNew"></ast-popup-menu-item>
+              <ast-popup-menu-item *ngIf="edit" text="Delete" (click)="delete()" [disabled]="record.__director__.isNew"></ast-popup-menu-item>
+            </ast-popup-menu>
+          </ast-dropdown-button>
+          <ast-button-group *ngIf="edit">
+            <ast-button text="Save and new" (click)="saveAndNew()" [default]="true"></ast-button>
+            <ast-button text="OK" (click)="ok()"></ast-button>
+            <ast-dropdown-button>
+              <ast-popup-menu>
+                <ast-popup-menu-item text="Save" (click)="save()"></ast-popup-menu-item>
+                <ast-popup-menu-item text="Save and make a copy" (click)="saveAndCopy()"></ast-popup-menu-item>
+                <ast-popup-menu-item text="Save and make a copy with related records" (click)="saveAndCopy(true)"></ast-popup-menu-item>
+              </ast-popup-menu>
+            </ast-dropdown-button>
+          </ast-button-group>
+          <ast-button text="Close" (click)="closeWindow()"></ast-button>
+        </div>
+      </div>
+    </ast-toolbar>
+  </div>
+</div>
