@@ -17,14 +17,15 @@ import { AppComponent } from './app.component';
 import ssh2 from 'ssh2';
 
 var config = {
-  ssh: {
+  ssh: undefined,
+  /*ssh: {
     host: '',
     username: '',
     password: '',
     port:undefined,
     keepaliveInterval: 4000,
     readyTimeout: 5000,
-  },
+  },*/
   mysql: {
     host: 'localhost',
     user: '',
